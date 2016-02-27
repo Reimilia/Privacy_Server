@@ -1,4 +1,4 @@
-from flask_restful import Resource,Api,abort,reqparse
+from flask_restful import Resource,fields,marshal_with,reqparse
 from common.database import not_existed,ok,add_policy,insert_record,delete_record,search_record,select_policy
 from errors import PrivacyServerError
 from datetime import datetime
@@ -10,7 +10,7 @@ class Privacy(Resource):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('Resource', type= dict, required = True, action = 'append',
                                    help= 'Must provide some resources')
-        self.deal_error= PrivacyServerError();
+        self.deal_error= PrivacyServerError()
 
     def get(self):
         '''
@@ -39,7 +39,8 @@ class PrivacyList(Resource):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('UpdatePolicy', type= dict, help = 'Must provide update info.')
         self.reqparse.add_argument('Policy', type= dict, help= 'Must provide some Policy if post new one')
-        self.deal_error= PrivacyServerError();
+        self.deal_error= PrivacyServerError()
+
 
     def get(self,patient_id):
         '''
@@ -51,7 +52,8 @@ class PrivacyList(Resource):
         search_result = select_policy(patient_id)
         if search_result == not_existed:
             self.deal_error.abort_with_search_error(patient_id)
-        return search_result, 200
+        #$print search_result
+        return {'Identifier' : patient_id, 'Resource': search_result}
 
     def post(self,patient_id):
         args = self.reqparse.parse_args()

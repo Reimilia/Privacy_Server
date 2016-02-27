@@ -14,5 +14,6 @@ class PrivacyServerError():
     def abort_with_POST_error(self):
         abort(404, message= "The data submitted lack some essential parts or does not meet the requirement")
 
+
     def abort_with_search_error(self,identifier):
         abort(404, message= "The policy for this patient {} is not in database, please check your posted data".format(identifier))
