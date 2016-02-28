@@ -2,11 +2,12 @@
 
 ## Preparation
 
-'''sudo pip install -r requirements.txt'''
-'''sudo apt-get install postgresql'''
+```sudo pip install -r requirements.txt```
 
-then run setup.py
-and read /resources/common/db_config.py to settle your own postgresql database
+```sudo apt-get install postgresql```
+
+then ```python setup.py```
+and read ```./resources/common/db_config.py``` to settle your own postgresql database
 
 
 ## How to use
