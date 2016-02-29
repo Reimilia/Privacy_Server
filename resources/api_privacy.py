@@ -4,6 +4,12 @@ from errors import PrivacyServerError
 from datetime import datetime
 from common.json_parser import list2json
 
+'''
+    The restful API was designed with the help of flask-restful
+    It can deal with certain basic API functions like GET , POST, PUT, DELETE
+    TO DO: Authentication Process and Visualization
+'''
+
 
 class Privacy(Resource):
     def __init__(self):
@@ -56,6 +62,11 @@ class PrivacyList(Resource):
         return {'Identifier' : patient_id, 'Resource': search_result}
 
     def post(self,patient_id):
+        '''
+        Single post
+        :param patient_id:
+        :return:
+        '''
         args = self.reqparse.parse_args()
         if args['Policy'] is None:
             self.deal_error.abort_with_POST_error()
@@ -66,6 +77,13 @@ class PrivacyList(Resource):
         return select_policy(args['identifer']), 200
 
     def put(self,patient_id):
+        '''
+        Single put, it will modify the privacy_policy
+        Simply, the Identifier is the same with patient_id and this put method might directly merge these data.
+        The best way is to first DELETE then PUT if you want to create a new policy
+        :param patient_id:
+        :return:
+        '''
         args = self.reqparse.parse_args()
         if args['UpdatePolicy'] is None:
             self.deal_error.abort_with_POST_error()

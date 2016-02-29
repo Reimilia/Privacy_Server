@@ -4,6 +4,7 @@ import psycopg2
 import psycopg2.extras
 from config_db import dbuser, dbname
 
+# TO DO: extend the policy_data to a more appropriate structure
 
 ok                  =  1
 type_error          = -1
