@@ -14,7 +14,7 @@ from common.json_parser import list2json
 class Privacy(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('Resource', type= dict, required = True, action = 'append',
+        self.reqparse.add_argument('Resource', required = True, action = 'append', type=dict,
                                    help= 'Must provide some resources')
         self.deal_error= PrivacyServerError()
 
@@ -31,11 +31,12 @@ class Privacy(Resource):
         :return:
         '''
         args = self.reqparse.parse_args()
-
+        #print args
         if len(args['Resource']) > 0 :
             for key in args['Resource']:
-                if 'Identifier' in key and 'Policy' in key:
-                    insert_record(key['Identifier'],key['Policy'],datetime.now())
+                #print key
+                if 'Identifier' in key and 'Policy' in key and 'resourceType' in key:
+                    insert_record(key['Identifier'],{key['resourceType'] : key['Policy']},datetime.now())
                 else:
                     self.deal_error.abort_with_POST_error()
         return "Ok", 200
@@ -43,8 +44,11 @@ class Privacy(Resource):
 class PrivacyList(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('UpdatePolicy', type= dict, help = 'Must provide update info.')
+        self.reqparse.add_argument('UpdatePolicy', type=dict, help = 'Must provide update info.')
         self.reqparse.add_argument('Policy', type= dict, help= 'Must provide some Policy if post new one')
+        self.reqparse.add_argument('Identifier', type= str, help= 'Must provide Identifier')
+        self.reqparse.add_argument('resourceType', type= str, help= 'Must provide resourceType')
+        self.reqparse.add_argument('resourceID', type= str, help= 'Must provide some Policy if post new one')
         self.deal_error= PrivacyServerError()
 
 
@@ -68,13 +72,15 @@ class PrivacyList(Resource):
         :return:
         '''
         args = self.reqparse.parse_args()
-        if args['Policy'] is None:
+        if args['Policy'] is None or args['Identifier'] is None or args['resourceType'] is None:
+            self.deal_error.abort_with_POST_error()
+        if patient_id != args['Identifier']:
             self.deal_error.abort_with_POST_error()
         if search_record(patient_id) == not_existed:
-            insert_record(patient_id,args['Policy'],datetime.now())
+            insert_record(patient_id,{args['resourceType']:args['Policy']},datetime.now())
         else:
             return "You should use PUT method to update a policy", 200
-        return select_policy(args['identifer']), 200
+        return select_policy(patient_id), 200
 
     def put(self,patient_id):
         '''
@@ -85,16 +91,24 @@ class PrivacyList(Resource):
         :return:
         '''
         args = self.reqparse.parse_args()
-        if args['UpdatePolicy'] is None:
+        print args
+        if args['UpdatePolicy'] is None or args['Identifier'] is None or args['resourceType'] is None:
+            self.deal_error.abort_with_POST_error()
+        if patient_id != args['Identifier']:
             self.deal_error.abort_with_POST_error()
         if search_record(patient_id) == not_existed:
-            insert_record(patient_id,args['UpdatePolicy'],datetime.now())
+            insert_record(patient_id,{args['resourceType']:args['UpdatePolicy']},datetime.now())
         else:
-            add_policy(patient_id,args['UpdatePolicy'],datetime.now())
+            add_policy(patient_id,{args['resourceType']:args['UpdatePolicy']},datetime.now())
         return select_policy(patient_id), 200
-
 
     def delete(self,patient_id):
         if search_record(patient_id) == ok:
             delete_record(patient_id)
         return 'Successfully deleted {}'.format(patient_id), 200
+
+
+if __name__=='__main__':
+    a = {1:{1:'a',2:'b',3:'c'}, 2:{4:'d',5:'e',6:'f'}}
+    b = {'Resource':a}
+    print b
