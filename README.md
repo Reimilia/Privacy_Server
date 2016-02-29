@@ -10,8 +10,12 @@ It should make full usage combined with [this proxy server](https://github.com/R
 
 ```sudo apt-get install postgresql```
 
-read [this configuration](./resources/common/db_config.py) to settle your own postgresql database
+read ./resources/common/db_config.py to settle your own postgresql database
 after check of configuration, run ```python setup_db.py``` to set up database for this server
+
+At this part , however, there might be a huge potential problem: setup_db.py might only create
+with users of your current user name in UNIX systems, and we don't know how to fix it, you can solve this problem by
+following the error message and comply with its setting. (The database will be set, yet not belongs to a desired user.)
 
 
 ## How to use
@@ -21,11 +25,10 @@ run server_index.py and use curl to test it
 For debug purpose, we recommend you to start with
 ```python server_index.py -d```
 
-The original port is settled at ```http://localhost:5000```, you can change it in [server_index.py](./server_index.py)
+The original port is settled at ```http://localhost:5000```, you can change it in server_index.py
 
 Multiple POST:
-```curl http://localhost:5000/Privacy -H "Content-Type: application/json" -X POST --data '{"Resource": [{"Identifier":"1", "Policy":[{"a":"b","e":"f"},{"c":"d"}], {"Identifier":"2", "Policy":{"hehe":"haha"}}]}'
-```
+```curl http://localhost:5000/Privacy -H "Content-Type: application/json" -X POST --data '{"Resource": [{"Identifier":"1", "Policy":[{"a":"b","e":"f"},{"c":"d"}], {"Identifier":"2", "Policy":{"hehe":"haha"}}]}'```
 
 Single GET:
 ```curl http://localhost:5000/Privacy/<Patient_id>```
