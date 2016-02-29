@@ -11,13 +11,17 @@ It should make full usage combined with [this proxy server](https://github.com/R
 ```sudo apt-get install postgresql```
 
 read [this configuration](./resources/common/db_config.py) to settle your own postgresql database
-after check of configuration, run ```python setup_db.py```
+after check of configuration, run ```python setup_db.py``` to set up database for this server
 
 
 ## How to use
 
 run server_index.py and use curl to test it
 
+For debug purpose, we recommend you to start with
+```python server_index.py -d```
+
+The original port is settled at ```http://localhost:5000```, you can change it in [server_index.py](./server_index.py)
 
 Multiple POST:
 ```curl http://localhost:5000/Privacy -H "Content-Type: application/json" -X POST --data '{"Resource": [{"Identifier":"1", "Policy":[{"a":"b","e":"f"},{"c":"d"}], {"Identifier":"2", "Policy":{"hehe":"haha"}}]}'
