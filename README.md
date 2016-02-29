@@ -20,23 +20,22 @@ following the error message and comply with its setting. (The database will be s
 
 ## How to use
 
-run server_index.py and use curl to test it
+run server_index.py and you can use curl to test it
 
 For debug purpose, we recommend you to start with
 ```python server_index.py -d```
 
 The original port is settled at ```http://localhost:5000```, you can change it in server_index.py
 
-Multiple POST:
-```curl http://localhost:5000/Privacy -H "Content-Type: application/json" -X POST --data '{"Resource": [{"Identifier":"1", "Policy":[{"a":"b","e":"f"},{"c":"d"}], {"Identifier":"2", "Policy":{"hehe":"haha"}}]}'```
+To see how to debug or deploy this server, you can run ```example.py``` to see its basic structure
 
-Single GET:
-```curl http://localhost:5000/Privacy/<Patient_id>```
+Generally, POST needs at least three arguments:
 
-E.g.
-```curl http://localhost:5000/Privacy/f01f00a3-a38a-4401-a3e4-53c4239badb4```
+*   Identifier
+*   resourceType (Which means type of hidden policy)
+*   Policy
 
-Returned json data:
+PUT is quite similar , and GET will get a response like this:
 ```
 {
     "Identifier": "f01f00a3-a38a-4401-a3e4-53c4239badb4", 
@@ -48,13 +47,18 @@ Returned json data:
 }
 ```
 
-**Resource** itself is the policy data we stored in data base
+## Development Status and Further Extension
 
+- [x] **Privacy_Server (Which designed to store policy and get interact with submitter)**
+    - [ ] RESTful API design
+        - [x] GET full policy data
+        - [ ] GET with searching parameters
+        - [ ] GET history version
+        - [x] POST policy data
+        - [x] PUT method to update(or insert data)
+        - [x] DELETE method to clean up a policy data
+        - [ ] Access with full authetication
 
-Single PUT:
-```curl http://localhost:5000/Privacy/f01f00a3-a38a-4401-a3e4-53c4239badb4 -H "Content-Type: application/json" -X PUT --data '{"UpdatePolicy":{"Patient":{"gender":"Protected"}}}' -v```
-
-
-Single DELETE:
-```curl http://localhost:5000/Privacy/<Patient_id> -X DELETE -v```
-
+    - [ ] Method to login and modify privacy policy
+        - [ ] Visualize Component
+        - [ ] Basic Submitting Forms
