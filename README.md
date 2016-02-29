@@ -45,7 +45,9 @@ Returned json data:
             "gender": "Protected"
         }
     }
-}```
+}
+```
+
 **Resource** itself is the policy data we stored in data base
 
 
