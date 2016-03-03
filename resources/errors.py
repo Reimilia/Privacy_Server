@@ -17,3 +17,6 @@ class PrivacyServerError():
 
     def abort_with_search_error(self,identifier):
         abort(404, message= "The policy for this patient {} is not in database, please check your posted data".format(identifier))
+
+    def abort_with_Scope_error(self):
+        abort(404, message= "You should provide at least one Scope in the following one : Clinician/Researcher/Patient/Commercial")

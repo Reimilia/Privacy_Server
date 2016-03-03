@@ -112,7 +112,6 @@ def add_policy(patient_id, added_policy, time):
         with curs:
             curs.execute(SELECT, (patient_id,))
             result = curs.fetchone()
-
     if result is not None:
         merged_policy = merge.merger(result[1], added_policy)
 
