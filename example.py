@@ -17,9 +17,9 @@ example_data={
         "Policy": {
             "code": {
                 "text": "Color blind",
-                "coding": {
+                "coding": [{
                     "display": "internal blind",
-                }
+                }]
             }
 
         }},
