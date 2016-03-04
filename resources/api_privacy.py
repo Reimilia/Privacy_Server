@@ -12,7 +12,7 @@ from common.json_parser import list2json
     TO DO: Authentication Process and Visualization
 '''
 
-SCOPE = ["Clinician", "Researcher", "Patient", "Commercial"]
+SCOPE = ["Clinician", "Researcher", "Patient", "Commercial", 'All']
 
 def check_scope(scope_dict):
     #print scope_dict
@@ -113,6 +113,7 @@ class PrivacyList(Resource):
         :return:
         '''
         args = self.reqparse.parse_args()
+        print args
         if args['Policy'] is None or args['Identifier'] is None or args['resourceType'] is None:
             self.deal_error.abort_with_POST_error()
         if not check_scope(args['Scope']):

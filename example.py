@@ -62,6 +62,8 @@ if __name__ == '__main__':
     print resp._content
     requests.delete('%s/f01f00a3-a38a-4401-a3e4-53c4239badb4' %BASE)
     requests.delete('%s/f001' %BASE)
+    # headers cannot be omitted
+    # TODO : make headers not a must argument
     resp = requests.post('%s' %(BASE), data=json.dumps(example_data), headers={'Content-Type': 'application/json'})
     print resp._content
     resp = requests.get('%s/f001' %BASE)
