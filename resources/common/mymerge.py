@@ -1,4 +1,5 @@
 import json
+import copy
 
 type_error = -1
 
@@ -7,7 +8,7 @@ def merge_array(base, head):
 	if type(base) != list or type(head) != list:
 		return type_error
 
-	result = base
+	result = copy.deepcopy(base)
 	for item in head:
 		if item in base:
 			continue
@@ -29,14 +30,14 @@ def merge_array(base, head):
 					result[index] = merger(new_base, item)
 
 	return sorted(result)
-			
+
 
 def merger(base, head):
 
 	if not isinstance(base, dict) or not isinstance(head, dict):
 		return type_error
 
-	result = base
+	result = copy.deepcopy(base)
 	for key in head:
 		if key not in base:
 			result[key] = head[key]
@@ -46,5 +47,38 @@ def merger(base, head):
 			result[key] = merge_array(result[key], head[key])
 		elif type(head[key]) is dict:
 			result[key] = merger(result[key], head[key])
+
+	return result
+
+
+
+
+def new_merger(base, head):
+
+	if not isinstance(base, dict) or not isinstance(head, dict):
+		return type_error
+
+	result = copy.deepcopy(base)
+
+	for head_key in head:
+
+		mergeTag = False
+		# This tag is set to indicate whether head[head_key] needs to
+		# be merged with an entry in the base.
+		# If this tag is false, head[head_key] only needs to be added
+		# into the base.
+
+		for base_key in result:
+
+			resourceTag = head[head_key]['resourceType'] == result[base_key]['resourceType']
+			scopeTag    = head[head_key]['Scope'] == result[base_key]['Scope']
+			if resourceTag is True and scopeTag is True:
+				merged_privacy = merger(head[head_key]['Privacy'], result[base_key]['Privacy'])
+				result[base_key]['Privacy'] = merged_privacy
+				mergeTag = True
+				break
+
+		if mergeTag == False:
+			result[head_key] = head[head_key]
 
 	return result
