@@ -10,7 +10,7 @@ app = Flask(__name__)
 api = Api(app)
 
 api.add_resource(Privacy, '/Privacy')
-api.add_resource(PrivacyList, '/Privacy/<patient_id>')
+api.add_resource(PrivacyList, '/Privacy/<id_>')
 
 HOST = 'localhost:5000'
 PORT = 5000
