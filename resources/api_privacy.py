@@ -111,7 +111,8 @@ class PrivacyList(Resource):
         search_result = select_policy(id_)
         if search_result == not_existed:
             self.deal_error.abort_with_search_error(id_)
-        #$print search_result
+        print search_result
+
         return {'Identifier' : id_, 'Resource': search_result}
 
     def post(self,id_):
@@ -156,6 +157,8 @@ class PrivacyList(Resource):
             insert_record(args['resourceID'],wrap_up(args['resourceID'],args['Identifier'],args['resourceType'],args['Scope'],args['Policy']),datetime.now())
         else:
             add_policy(args['resourceID'],wrap_up(args['resourceID'],args['Identifier'],args['resourceType'],args['Scope'],args['Policy']),datetime.now())
+        print select_policy(id_)
+
         return {'Identifier' : id_,  'Resource': select_policy(id_)},200
 
     def delete(self,id_):

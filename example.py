@@ -43,11 +43,11 @@ example_data={
         "Policy": {
              "performer": {
                 "display": "A. Langeveld",
-                "reference": "Practitioner/f005"
+
             },
              "subject": {
                 "display": "P. van de Heuvel",
-                "reference": "Patient/f001"
+
             }
         }}]
     }
@@ -70,6 +70,10 @@ if __name__ == '__main__':
     requests.delete('%s/f001' %BASE)
     requests.delete('%s/f002' %BASE)
     requests.delete('%s/f005' %BASE)
+    requests.delete('%s/ob-genetics-2' %BASE)
+    requests.delete('%s/ob-genetics-1' %BASE)
+    requests.delete('%s/example' %BASE)
+
     # headers cannot be omitted
     # TODO : make headers not a must argument
     resp = requests.post('%s' %(BASE), data=json.dumps(example_data), headers={'Content-Type': 'application/json'})
