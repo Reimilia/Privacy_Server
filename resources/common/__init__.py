@@ -1,1 +1,1 @@
-from database import add_policy,search_record,select_policy,insert_record,delete_record
+from new_database import insert_policy,delete_policy,search_policy,not_existed,ok,merge_policy

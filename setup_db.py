@@ -21,6 +21,7 @@ if __name__ == '__main__':
     with conn:
         with conn.cursor() as curs:
             curs.execute("CREATE TABLE privacy (patient_id varchar PRIMARY KEY, policy json, last_modified date)")
-            curs.execute("CREATE TABLE user (user_id varchar PRIMARY KEY, password varchar, email varchar)")
+            curs.execute("CREATE TABLE user_table (user_id varchar PRIMARY KEY, password varchar, email varchar)")
+
 
     conn.close()

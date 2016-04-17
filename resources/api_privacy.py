@@ -1,5 +1,7 @@
 from flask_restful import Resource,fields,marshal_with,reqparse
-from common.database import not_existed,ok,add_policy,insert_record,delete_record,search_record,select_policy
+
+#from common import not_existed,ok,add_policy,insert_record,delete_record,search_record,select_policy
+from common import not_existed,ok,insert_policy,delete_policy,search_policy,merge_policy
 from errors import PrivacyServerError
 from datetime import datetime
 import random
@@ -24,7 +26,7 @@ def check_scope(scope_dict):
 def wrap_up(id_, patient_id, resource_Type, resource_Scope, resource_Policy):
     '''
     Set up the stored structure of privacy_policy
-    TODO : implement it and make the structure more complete
+
     :param patient_id : Identifier of a patient
     :param resource_Type: policy for what type of resource
     :param resource_Scope: the policy should be applied to whom they read the data
@@ -32,6 +34,7 @@ def wrap_up(id_, patient_id, resource_Type, resource_Scope, resource_Policy):
     :return: sth can be inserted into database
     '''
 
+    # TODO : update layer-structure design
     source =  {
             'ResourceIdentifier' : id_,
             'Policy_ResourceType': resource_Type,
@@ -70,15 +73,20 @@ class Privacy(Resource):
                 #print key
                 if 'Identifier' in key and 'Policy' in key and 'resourceType' in key and 'resourceID' in key:
                     if 'Scope' in key and check_scope(key['Scope']):
-                        try:
+                        '''try:
                             add_policy(key['resourceID'],wrap_up(key['resourceID'],key['Identifier'],key['resourceType'],key['Scope'],key['Policy']),datetime.now())
                         except:
                             insert_record(key['resourceID'],wrap_up(key['resourceID'],key['Identifier'],key['resourceType'],key['Scope'],key['Policy']),datetime.now())
+                        '''
+                        merge_policy(key['resourceID'],wrap_up(key['resourceID'],key['Identifier'],key['resourceType'],key['Scope'],key['Policy']),datetime.now())
                     else:
+                        '''
                         try:
                             add_policy(key['resourceID'],wrap_up(key['resourceID'],key['Identifier'],key['resourceType'],key['Scope'],key['Policy']),datetime.now())
                         except:
                             insert_record(key['resourceID'],wrap_up(key['resourceID'],key['Identifier'],key['resourceType'],key['Scope'],key['Policy']),datetime.now())
+                        '''
+                        merge_policy(key['resourceID'],wrap_up(key['resourceID'],key['Identifier'],key['resourceType'],'All',key['Policy']),datetime.now())
                 else:
                     self.deal_error.abort_with_POST_error()
         return "Ok", 200
@@ -108,7 +116,7 @@ class PrivacyList(Resource):
         '''
         args = self.getparse.parse_args()
 
-        search_result = select_policy(id_)
+        search_result = search_policy(id_)
         if search_result == not_existed:
             self.deal_error.abort_with_search_error(id_)
         print search_result
@@ -129,11 +137,11 @@ class PrivacyList(Resource):
             self.deal_error.abort_with_Scope_error()
         #if patient_id != args['Identifier']:
         #    self.deal_error.abort_with_POST_error()
-        if search_record(id_) == not_existed:
-            insert_record(args['resourceID'],wrap_up(args['resourceID'],id_,args['resourceType'],args['Scope'],args['Policy']),datetime.now())
+        if search_policy(id_) == not_existed:
+            merge_policy(args['resourceID'],wrap_up(args['resourceID'],id_,args['resourceType'],args['Scope'],args['Policy']),datetime.now())
         else:
             return "You should use PUT method to update a policy", 200
-        return select_policy(id_), 200
+        return search_policy(id_), 200
 
     def put(self,id_):
         '''
@@ -153,17 +161,17 @@ class PrivacyList(Resource):
         #if patient_id != args['Identifier']:
         #    self.deal_error.abort_with_POST_error()
         print args
-        if search_record(id_) == not_existed:
-            insert_record(args['resourceID'],wrap_up(args['resourceID'],args['Identifier'],args['resourceType'],args['Scope'],args['Policy']),datetime.now())
+        if search_policy(id_) == not_existed:
+            insert_policy(args['resourceID'],wrap_up(args['resourceID'],args['Identifier'],args['resourceType'],args['Scope'],args['Policy']),datetime.now())
         else:
-            add_policy(args['resourceID'],wrap_up(args['resourceID'],args['Identifier'],args['resourceType'],args['Scope'],args['Policy']),datetime.now())
-        print select_policy(id_)
+            merge_policy(args['resourceID'],wrap_up(args['resourceID'],args['Identifier'],args['resourceType'],args['Scope'],args['Policy']),datetime.now())
+        print search_policy(id_)
 
-        return {'Identifier' : id_,  'Resource': select_policy(id_)},200
+        return {'Identifier' : id_,  'Resource': search_policy(id_)},200
 
     def delete(self,id_):
-        if search_record(id_) == ok:
-            delete_record(id_)
+        if search_policy(id_) == ok:
+            delete_policy(id_)
             return 'Successfully deleted {}'.format(id_), 200
         else:
             return 'No record!', 201

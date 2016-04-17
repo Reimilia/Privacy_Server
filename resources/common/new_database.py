@@ -19,9 +19,9 @@ DELETE_PRIVACY = "DELETE FROM privacy WHERE patient_id = %s"
 SELECT_PRIVACY = "SELECT * FROM privacy WHERE patient_id = %s"
 UPDATE_PRIVACY = "UPDATE privacy set policy=%s, last_modified=%s WHERE patient_id=%s"
 
-INSERT_USER = "INSERT INTO user (user_id, password, email) VALUES (%s, %s, %s)"
-DELETE_USER = "DELETE FROM user WHERE user_id = %s"
-SELECT_USER = "SELECT * FROM user WHERE user_id = %s"
+INSERT_USER = "INSERT INTO user_table (user_id, password, email) VALUES (%s, %s, %s)"
+DELETE_USER = "DELETE FROM user_table WHERE user_id = %s"
+SELECT_USER = "SELECT * FROM user_table WHERE user_id = %s"
 
 def search_policy(patient_id):
     """
