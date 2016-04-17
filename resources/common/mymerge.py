@@ -1,5 +1,6 @@
 import json
 import copy
+#from example_json import j1,j2
 
 type_error = -1
 
@@ -55,30 +56,42 @@ def merger(base, head):
 
 def new_merger(base, head):
 
-	if not isinstance(base, dict) or not isinstance(head, dict):
-		return type_error
+    if isinstance(base, str):
+        base = json.loads(base)
+    if isinstance(head, str):
+        head = json.loads(head)
 
-	result = copy.deepcopy(base)
+    print base
+    print head
 
-	for head_key in head:
+    if (not isinstance(base, dict)) or (not isinstance(head, dict)):
+        return type_error
 
-		mergeTag = False
-		# This tag is set to indicate whether head[head_key] needs to
-		# be merged with an entry in the base.
-		# If this tag is false, head[head_key] only needs to be added
-		# into the base.
+    result = copy.deepcopy(base)
+    print result
+    print type(result)
+    for head_key in head:
 
-		for base_key in result:
+        mergeTag = False
+        # This tag is set to indicate whether head[head_key] needs to
+        # be merged with an entry in the base.
+        # If this tag is false, head[head_key] only needs to be added
+        # into the base.
 
-			resourceTag = head[head_key]['resourceType'] == result[base_key]['resourceType']
-			scopeTag    = head[head_key]['Scope'] == result[base_key]['Scope']
-			if resourceTag is True and scopeTag is True:
-				merged_privacy = merger(head[head_key]['Privacy'], result[base_key]['Privacy'])
-				result[base_key]['Privacy'] = merged_privacy
-				mergeTag = True
-				break
+        for base_key in result:
+            resourceTag = head[head_key]['Policy_ResourceType'] == result[base_key]['Policy_ResourceType']
+            scopeTag    = head[head_key]['Scope'] == result[base_key]['Scope']
+            if resourceTag is True and scopeTag is True:
+                merged_privacy = merger(head[head_key]['Policy'], result[base_key]['Policy'])
+                result[base_key]['Policy'] = merged_privacy
+                mergeTag = True
+                break
 
-		if mergeTag == False:
-			result[head_key] = head[head_key]
+        if mergeTag == False:
+            result[head_key] = head[head_key]
 
-	return result
+    return result
+
+
+if __name__ == '__main__':
+    print json.dumps(new_merger(j1, j2), indent=2)

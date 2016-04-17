@@ -53,7 +53,7 @@ example_data={
     }
 
 single_example_data={
-    'Policy': {'gender': 'Protected', 'name': {'text': 'You cannot see it'}},
+    'Policy': {'gender': 'Protected', 'name': 'fhir_mask'},
     'Identifier': 'f01f00a3-a38a-4401-a3e4-53c4239badb4',
     'resourceType': "Patient",
     'Scope': 'Clinician',
@@ -81,7 +81,8 @@ if __name__ == '__main__':
     resp = requests.get('%s/f005' %BASE)
     print resp._content
     resp = requests.put('%s/f01f00a3-a38a-4401-a3e4-53c4239badb4' %BASE , data=json.dumps(single_example_data), headers={'Content-Type': 'application/json'})
-    #resp = requests.put('%s/f01f00a3-a38a-4401-a3e4-53c4239badb4' %BASE , data=json.dumps(single_example_data), headers={'Content-Type': 'application/json'})
+    print resp._content
+    resp = requests.put('%s/f01f00a3-a38a-4401-a3e4-53c4239badb4' %BASE , data=json.dumps(single_example_data), headers={'Content-Type': 'application/json'})
     #resp = requests.put('%s/f01f00a3-a38a-4401-a3e4-53c4239badb4' %BASE , data=json.dumps(single_example_data), headers={'Content-Type': 'application/json'})
     #resp = requests.put('%s/f01f00a3-a38a-4401-a3e4-53c4239badb4' %BASE , data=json.dumps(single_example_data), headers={'Content-Type': 'application/json'})
     #resp = requests.put('%s/f01f00a3-a38a-4401-a3e4-53c4239badb4' %BASE , data=json.dumps(single_example_data), headers={'Content-Type': 'application/json'})

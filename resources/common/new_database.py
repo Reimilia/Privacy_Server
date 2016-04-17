@@ -106,9 +106,10 @@ def merge_policy(patient_id, added_policy, time):
     """
 
     if type(added_policy) is str:
-        added_policy = json.loads(added_policy)
-    elif type(added_policy) not in [list, dict]:
-        return type_error
+        added_policy = json.dumps(json.loads(added_policy))
+    elif type(added_policy) in [list, dict]:
+        added_policy = json.dumps(added_policy)
+        #return type_error
 
     conn = psycopg2.connect(db)
 
@@ -117,14 +118,15 @@ def merge_policy(patient_id, added_policy, time):
             curs.execute(SELECT_PRIVACY, (patient_id,))
             result = curs.fetchone()
     if result is not None:
-        merged_policy = merge.merger(result[1], added_policy)
-
+        merged_policy = merge.new_merger(result[1], added_policy)
+        print merged_policy
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             with curs:
                 curs.execute(UPDATE_PRIVACY, (json.dumps(merged_policy), time, patient_id))
     else:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             with curs:
+                #print added_policy,type(added_policy)
                 curs.execute(INSERT_PRIVACY, (patient_id, added_policy, time))
 
     conn.commit()

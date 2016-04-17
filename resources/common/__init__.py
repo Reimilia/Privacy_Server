@@ -1,1 +1,1 @@
-from new_database import insert_policy,delete_policy,search_policy,not_existed,ok,merge_policy
+from new_database import insert_policy,delete_policy,search_policy,not_existed,ok,merge_policy,select_policy

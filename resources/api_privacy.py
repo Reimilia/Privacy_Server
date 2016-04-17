@@ -1,7 +1,7 @@
 from flask_restful import Resource,fields,marshal_with,reqparse
 
 #from common import not_existed,ok,add_policy,insert_record,delete_record,search_record,select_policy
-from common import not_existed,ok,insert_policy,delete_policy,search_policy,merge_policy
+from common import not_existed,ok,insert_policy,delete_policy,search_policy,merge_policy,select_policy
 from errors import PrivacyServerError
 from datetime import datetime
 import random
@@ -119,7 +119,7 @@ class PrivacyList(Resource):
         search_result = search_policy(id_)
         if search_result == not_existed:
             self.deal_error.abort_with_search_error(id_)
-        print search_result
+        search_result = select_policy(id_)
 
         return {'Identifier' : id_, 'Resource': search_result}
 
@@ -141,7 +141,7 @@ class PrivacyList(Resource):
             merge_policy(args['resourceID'],wrap_up(args['resourceID'],id_,args['resourceType'],args['Scope'],args['Policy']),datetime.now())
         else:
             return "You should use PUT method to update a policy", 200
-        return search_policy(id_), 200
+        return select_policy(id_), 200
 
     def put(self,id_):
         '''
@@ -151,23 +151,24 @@ class PrivacyList(Resource):
         :param patient_id:
         :return:
         '''
-        print 'here'
-        args = self.reqparse.parse_args()
 
+        args = self.reqparse.parse_args()
         if args['Policy'] is None or args['Identifier'] is None or args['resourceType'] is None:
             self.deal_error.abort_with_POST_error()
         if not check_scope(args['Scope']):
             self.deal_error.abort_with_Scope_error()
         #if patient_id != args['Identifier']:
         #    self.deal_error.abort_with_POST_error()
-        print args
+        #print args
         if search_policy(id_) == not_existed:
+            #print '1'
             insert_policy(args['resourceID'],wrap_up(args['resourceID'],args['Identifier'],args['resourceType'],args['Scope'],args['Policy']),datetime.now())
         else:
+            #print '2'
             merge_policy(args['resourceID'],wrap_up(args['resourceID'],args['Identifier'],args['resourceType'],args['Scope'],args['Policy']),datetime.now())
-        print search_policy(id_)
+        #print search_policy(id_)
 
-        return {'Identifier' : id_,  'Resource': search_policy(id_)},200
+        return {'Identifier' : id_,  'Resource': select_policy(id_)},200
 
     def delete(self,id_):
         if search_policy(id_) == ok:
