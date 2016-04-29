@@ -15,6 +15,7 @@ api.add_resource(PrivacyList, '/Privacy/<id_>')
 HOST = 'localhost:5000'
 PORT = 5000
 
+
 if __name__ == '__main__':
     arg_parser = ArgumentParser()
     arg_parser.add_argument('-d', '--debug', action='store_true')

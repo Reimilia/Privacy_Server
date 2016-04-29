@@ -73,6 +73,9 @@ if __name__ == '__main__':
     requests.delete('%s/ob-genetics-2' %BASE)
     requests.delete('%s/ob-genetics-1' %BASE)
     requests.delete('%s/example' %BASE)
+    for i in range(1,16,1):
+        requests.delete('%s/Observation_%s' %(BASE,str(i)))
+    requests.delete('%s/Patient_1')
 
     # headers cannot be omitted
     # TODO : make headers not a must argument
